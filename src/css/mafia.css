@@ -1,0 +1,115 @@
+body,
+html {
+  height: 100%;
+}
+
+.gameStatus {
+  text-align: center !important;
+  font-weight: bold;
+  font-size: 4em;
+}
+
+.gameLogs {
+  text-align: right;
+  font-size: 16px;
+  background: silver;
+  padding: 0;
+}
+
+.gamerContainer {
+  min-height: 150px;
+  min-width: 150px;
+  cursor: pointer;
+  text-align: right;
+  font-size: 1.8em;
+}
+.h5,
+h5 {
+  font-size: 1.8em;
+}
+.btn-block {
+  font-size: 1.8em;
+}
+.dayContainer {
+  background-color: gold;
+  direction: rtl;
+  display: table;
+}
+
+.nightContainer {
+  background-color: gray;
+  direction: rtl;
+  display: table;
+}
+
+.dayContainer .visibleInNight {
+  display: none;
+}
+
+.disabled {
+  cursor: none;
+  background-color: gray;
+}
+
+.heighlight {
+  border: 3px solid #d4003f;
+}
+
+.badge {
+  float: left;
+  margin: 0 2px;
+}
+
+.info {
+  text-align: center;
+  font-size: 2em;
+}
+
+.hidden {
+  display: none;
+}
+
+.display-5 {
+  font-size: 2em;
+}
+.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+.fs-1 {
+  font-size: 1rem !important;
+}
+.fs-2 {
+  font-size: 2rem !important;
+}
+.fs-3 {
+  font-size: 3rem !important;
+}
+.fs-4 {
+  font-size: 4rem !important;
+}
+
+.box {
+  background-color: rgba(255, 229, 100, 0.3);
+  border-right-color: rgb(255, 229, 100);
+  border-right-style: solid;
+  border-right-width: 4px;
+  box-sizing: border-box;
+  color: rgb(33, 37, 41);
+  display: block;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+    Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji,
+    Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  margin-bottom: 32px;
+  margin-right: -16px;
+  margin-top: 10px;
+  padding-bottom: 19.2px;
+  padding-right: 12px;
+  padding-left: 19.2px;
+  padding-top: 19.2px;
+  text-align: right;
+}
