@@ -308,7 +308,9 @@ function doctorAction(state, target, gamer) {
 }
 function priestAction(state, target, gamer) {
   if (!gamer.isDrunk && !gamer.isDisabled && target.isDumb) {
-    target.isDumb = false;
-    insertGamerLog(state, target, "توسط کشیش شفا یافت");
+    if (target.isDumb) {
+      target.isDumb = false;
+      insertGamerLog(state, target, "توسط کشیش شفا یافت");
+    } else insertGamerLog(state, target, "به اشتباه توسط کشیش شفا یافت");
   } else insertِDrunkLog(state, target, gamer, "شفا دهد");
 }
