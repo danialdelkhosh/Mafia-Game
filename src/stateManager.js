@@ -1,4 +1,4 @@
-import { whoIsNext, startNight } from "./actions";
+import { whoIsNext, startNight, startDay } from "./actions";
 import { showRole } from "./constant";
 import { arrayRemove } from "./utility";
 //---------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ export function prevStep(state) {
 export function nextStep(state) {
   saveState(state);
   if (state.day) startNight(state);
-  if (!state.finish) whoIsNext(state);
+  if (!state.finish) if (!whoIsNext(state)) startDay(state);
 }
 //---------------------------------------------------------------------------------
 export function saveState(state) {

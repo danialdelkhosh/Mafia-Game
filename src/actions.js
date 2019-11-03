@@ -53,7 +53,7 @@ function deliverGun(currentOwner, state) {
   }
 }
 //####################################################################################
-function startDay(state) {
+export function startDay(state) {
   // اعمال عملیات بر روی نقش ها
   while (state.actions.length > 0) {
     let action = state.actions.shift();
