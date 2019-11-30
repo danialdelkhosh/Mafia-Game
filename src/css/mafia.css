@@ -6,12 +6,12 @@ html {
 .gameStatus {
   text-align: center !important;
   font-weight: bold;
-  font-size: 4em;
+  font-size: 5rem;
 }
 
 .gameLogs {
   text-align: right;
-  font-size: 16px;
+  font-size: 1rem;
   background: silver;
   padding: 0;
 }
@@ -21,14 +21,11 @@ html {
   min-width: 150px;
   cursor: pointer;
   text-align: right;
-  font-size: 1.8em;
+  font-size: 1.8rem;
 }
-.h5,
-h5 {
-  font-size: 1.8em;
-}
+
 .btn-block {
-  font-size: 1.8em;
+  font-size: 2.5rem !important;
 }
 .dayContainer {
   background-color: gold;

@@ -8,8 +8,8 @@ import {
   Button,
   Card
 } from "react-bootstrap";
-//----------------------------------------------------------
 import { Gamer } from "./gamer";
+//----------------------------------------------------------
 import {
   saveState,
   getState,
@@ -88,7 +88,6 @@ export default class InitGame extends Component {
       return (
         <Container className="mt-3">
           <div className="box">
-            <h1>انتخاب بازیکن ها</h1>
             <Row>
               <Col>
                 <FormControl
@@ -102,6 +101,11 @@ export default class InitGame extends Component {
                 <Button size="lg" onClick={() => this.newGamerClick()} block>
                   افزودن بازیکن
                 </Button>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <h1>انتخاب بازیکن ها</h1>
               </Col>
             </Row>
             <Row>
@@ -209,6 +213,7 @@ function initializeGame(state, gamerList, roleList) {
     gamer.name = gamerList[i];
     gamer.alive = true;
     gamer.roleVisible = true;
+    gamer.showRole = false;
     if (gameRoles.length > 0) gamer.role = [gameRoles[0]];
     else gamer.role = [new Role("citizen", "شهروند", true, 99)];
     state.gamers.push(gamer);

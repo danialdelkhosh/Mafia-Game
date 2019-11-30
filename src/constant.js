@@ -11,10 +11,10 @@ export class Role {
 
 export const emptyState = {
   gamers: [],
-  framasons: [],
   nightLog: [],
   currentOrder: -1,
   currentRole: {},
+  currentPerson: "",
   day: false,
   finish: false,
   info: "",

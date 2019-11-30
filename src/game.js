@@ -3,16 +3,14 @@ import { Container, Row, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { renderGamer } from "./gamer";
 import { renderLog } from "./log";
-import { emptyState, showRole } from "./constant";
+import { showRole } from "./constant";
 import { initState, prevStep, nextStep, saveState } from "./stateManager";
 import { gamerSelected } from "./actions";
 
 export default class Game extends Component {
   constructor(props) {
     super(props);
-    this.state = emptyState;
-    if (!initState(this.state))
-      console.log("Error in initializing State:", this.state);
+    this.state = initState();
   }
   //####################################################################################
   tick() {
@@ -33,27 +31,24 @@ export default class Game extends Component {
     let target = this.state.gamers.find(gamer => gamer.key === i);
     if (this.state.finish || !target.alive) return;
     saveState(this.state);
-    this.setState({
-      state: this.state
-    });
     gamerSelected(target, this.state);
   }
   //####################################################################################
   render() {
     return (
-      <Container fluid className={
-        this.state.day ? "dayContainer h-100" : "nightContainer h-100"
-      }>
+      <Container
+        fluid
+        className={
+          this.state.day ? "dayContainer h-100" : "nightContainer h-100"
+        }
+      >
         <Row>
           <Col>
             <button
-              className="btn btn-primary btn-lg btn-block p-5"
+              className="btn btn-primary btn-lg btn-block p-4"
               onClick={() => {
                 if (this.state.step !== showRole) {
-                  prevStep(this.state);
-                  this.setState({
-                    state: this.state
-                  });
+                  this.setState({ ...prevStep(this.state) });
                 }
               }}
             >
@@ -63,7 +58,7 @@ export default class Game extends Component {
         </Row>
         <Row>
           <Col>
-            <div className="info alert alert-danger mb-3">
+            <div className="info alert alert-secondary mb-3">
               <h1 className="alert-heading">
                 {!this.state.day
                   ? this.state.info
@@ -84,31 +79,33 @@ export default class Game extends Component {
               isDumb: gamer.isDumb,
               isDrunk: gamer.isDrunk,
               isAccused: gamer.isAccused,
-              isFramasonChief: gamer.isFramasonChief,
+              showRole: gamer.showRole,
+              roleVisible: gamer.roleVisible,
               isDay: this.state.day,
               isGameFinished: this.state.finish,
-              roleVisible: gamer.roleVisible,
+              currentPerson: this.state.currentPerson,
               onClick: () => this.handleClick(gamer.key, this.state)
             });
           })}
         </Row>
         <Row>
-          <Col>
-            <button
-              className="btn btn-info btn-lg btn-block mt-5 p-5"
-              onClick={() => {
-                nextStep(this.state);
-                this.setState({
-                  state: this.state
-                });
-              }}
-            >
-              {"نفر/مرحله بعد"}
-            </button>
-          </Col>
+          <Col>{renderLog(this.state)}</Col>
         </Row>
         <Row>
-          <Col>{renderLog(this.state)}</Col>
+          <Col>
+            {!this.state.finish ? (
+              <button
+                className="btn btn-info btn-lg btn-block p-4 mt-2"
+                onClick={() => {
+                  nextStep(this.state);
+                }}
+              >
+                {"نفر/مرحله بعد"}
+              </button>
+            ) : (
+              ""
+            )}
+          </Col>
         </Row>
       </Container>
     );

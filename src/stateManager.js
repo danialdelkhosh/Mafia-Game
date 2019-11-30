@@ -1,35 +1,25 @@
 import { whoIsNext, startNight, startDay } from "./actions";
-import { showRole } from "./constant";
+import { showRole, emptyState } from "./constant";
 import { arrayRemove } from "./utility";
 //---------------------------------------------------------------------------------
 // فراخوانی وضعیت ذخیره شده برنامه در زمان ریفرش شدن صفحه
-export function initState(state) {
+export function initState() {
+  let state = emptyState;
   let gameState = window.localStorage.getItem("GameState");
   let stateArr = JSON.parse(gameState);
-  let prevState;
   if (stateArr && stateArr.length > 0) {
-    prevState = stateArr.pop();
-    state.gamers = prevState.gamers;
-    state.framasons = prevState.framasons;
-    state.nightLog = prevState.nightLog;
-    state.currentOrder = prevState.currentOrder;
-    state.currentRole = prevState.currentRole;
-    state.day = prevState.day;
-    state.finish = prevState.finish;
-    state.info = prevState.info;
-    state.timer = prevState.timer;
-    state.step = prevState.step;
-    state.logs = prevState.logs;
-    return true;
-  } else return false;
+    let prevState = stateArr.pop();
+    state = { ...state, ...prevState };
+  }
+  return state;
 }
 //---------------------------------------------------------------------------------
 export function prevStep(state) {
+  let prevState;
   if (state.finish) clearState();
   else {
     let gameState = window.localStorage.getItem("GameState");
     let stateArr = JSON.parse(gameState);
-    let prevState;
     do {
       prevState = stateArr.pop();
     } while (
@@ -38,20 +28,10 @@ export function prevStep(state) {
     );
 
     if (prevState && prevState.step !== showRole) {
-      state.gamers = prevState.gamers;
-      state.framasons = prevState.framasons;
-      state.nightLog = prevState.nightLog;
-      state.currentOrder = prevState.currentOrder;
-      state.currentRole = prevState.currentRole;
-      state.day = prevState.day;
-      state.finish = prevState.finish;
-      state.info = prevState.info;
-      state.timer = prevState.timer;
-      state.step = prevState.step;
-      state.logs = prevState.logs;
       window.localStorage.setItem("GameState", JSON.stringify(stateArr));
     }
   }
+  return prevState;
 }
 //---------------------------------------------------------------------------------
 export function nextStep(state) {

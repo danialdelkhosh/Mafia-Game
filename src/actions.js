@@ -52,26 +52,55 @@ function deliverGun(currentOwner, state) {
     newGodfather.role.push(getRole(currentOwner, "godfather"));
   }
 }
-//####################################################################################
-export function startDay(state) {
-  // اعمال عملیات بر روی نقش ها
+// اعمال عملیات بر روی نقش ها
+function doNightActions(state) {
   while (state.actions.length > 0) {
     let action = state.actions.shift();
-    action();
+    if (!action) continue;
+    let gamer = getGamerbyName(state, action.gamer);
+    let target = getGamerbyName(state, action.target);
+    switch (action.role) {
+      case "barman":
+        barmanAction(state, target, gamer);
+        break;
+      case "wizard":
+        wizardAction(state, target, gamer);
+        break;
+      case "godfather":
+        godfatherAction(state, target, gamer);
+        break;
+      case "sniper":
+        sniperAction(state, target, gamer);
+        break;
+      case "doctor":
+        doctorAction(state, target, gamer);
+        break;
+      case "natasha":
+        natashaAction(state, target, gamer);
+        break;
+      case "priest":
+        priestAction(state, target, gamer);
+        break;
+      default:
+        break;
+    }
   }
   var deadlist = state.gamers.filter(gamer => gamer.isShot);
   for (var index in deadlist) {
     kill(deadlist[index], state);
   }
   resetGamerState(state);
+}
+//####################################################################################
+export function startDay(state) {
+  doNightActions(state);
   //--------------------------------------------------------------------------------
   state.currentOrder = -1;
-  state.info = "";
+  state.currentPerson = "";
   state.currentRole = {};
   state.nightLog = [];
   state.day = true;
   state.timer = 0;
-  state.gamers.sort(() => Math.random() - 0.5);
 }
 //####################################################################################
 export function startNight(state) {
@@ -130,7 +159,7 @@ export function whoIsNext(state) {
     }
     state.currentOrder = currentPerson.key;
     state.currentRole = currentPerson.role;
-    state.info = currentPerson.name;
+    state.currentPerson = currentPerson.name;
     state.nightLog.push({
       key: currentPerson.key,
       name: currentPerson.name,
@@ -167,17 +196,17 @@ export function gamerSelected(target, state) {
   if (state.step === showRole) {
     if (target.roleVisible) {
       if (!target.role[0].personality) {
-        let mafiaNames = "";
         state.gamers.map(gamer => {
-          mafiaNames +=
-            gamer.name !== target.name && !gamer.role[0].personality
-              ? gamer.name + " " + gamer.role[0].persianName + " | "
-              : "";
+          gamer.showRole = !gamer.role[0].personality ? true : false;
           return true;
         });
-        state.info = target.role[0].persianName + "(" + mafiaNames + ")";
-      } else state.info = target.role[0].persianName;
-    } else state.info = "";
+      } else target.showRole = true;
+    } else {
+      state.gamers.map(gamer => {
+        gamer.showRole = false;
+        return true;
+      });
+    }
     let remainGamer = state.gamers.find(gamer => gamer.roleVisible === true);
     if (!remainGamer) {
       state.step = gameStarted;
@@ -194,63 +223,91 @@ export function gamerSelected(target, state) {
       let currentGamer = state.gamers.find(
         gamer => gamer.key === state.currentOrder
       );
-      gamerAction(currentGamer, state.currentRole, target, state);
+      saveAction(state, currentGamer, state.currentRole.name, target);
     }
     // اگر هنوز بازی ادامه دارد برو به نفر بعدی
     if (!state.finish) {
       // اگر فردی جهت انجام نقش باقی نمانده است روز را شروع کن
       if (!whoIsNext(state)) startDay(state);
     }
+    state.gamers.sort((a, b) => {
+      if (a.alive && b.alive) return Math.random() - 0.5;
+      else return a.alive ? -1 : 1;
+    });
   }
 }
 //####################################################################################
-function gamerAction(gamer, gamerRole, target, state) {
-  switch (gamerRole.name) {
+function getGamerbyName(state, gamerName) {
+  return state.gamers.find(gamer => {
+    return gamer.name === gamerName;
+  });
+}
+//####################################################################################
+function saveAction(state, gamer, gamerRole, target) {
+  switch (gamerRole) {
     case "barman":
       if (getRole(target, "sniper")) {
-        state.actions[0] = function() {
-          barmanAction(state, target, gamer);
+        state.actions[0] = {
+          role: gamerRole,
+          gamer: gamer.name,
+          target: target.name
         };
       } else {
-        state.actions[1] = function() {
-          barmanAction(state, target, gamer);
+        state.actions[1] = {
+          role: gamerRole,
+          gamer: gamer.name,
+          target: target.name
         };
       }
       break;
     case "wizard":
       if (getRole(target, "barman")) {
-        state.actions[0] = function() {
-          wizardAction(state, target, gamer);
+        state.actions[0] = {
+          role: gamerRole,
+          gamer: gamer.name,
+          target: target.name
         };
       } else {
-        state.actions[2] = function() {
-          wizardAction(state, target, gamer);
+        state.actions[2] = {
+          role: gamerRole,
+          gamer: gamer.name,
+          target: target.name
         };
       }
       break;
     case "godfather":
-      state.actions[3] = function() {
-        godfatherAction(state, target, gamer);
+      state.actions[3] = {
+        role: gamerRole,
+        gamer: gamer.name,
+        target: target.name
       };
       break;
     case "sniper":
-      state.actions[4] = function() {
-        sniperAction(state, target, gamer);
+      state.actions[4] = {
+        role: gamerRole,
+        gamer: gamer.name,
+        target: target.name
       };
       break;
     case "doctor":
-      state.actions[5] = function() {
-        doctorAction(state, target, gamer);
+      state.actions[5] = {
+        role: gamerRole,
+        gamer: gamer.name,
+        target: target.name
       };
       break;
     case "natasha":
-      state.actions[6] = function() {
-        natashaAction(state, target, gamer);
+      state.actions[6] = {
+        role: gamerRole,
+        gamer: gamer.name,
+        target: target.name
       };
       break;
     case "priest":
-      state.actions[7] = function() {
-        priestAction(state, target, gamer);
+      state.actions[7] = {
+        role: gamerRole,
+        gamer: gamer.name,
+        target: target.name
       };
       break;
     case "joker":
@@ -307,7 +364,7 @@ function doctorAction(state, target, gamer) {
   } else insertِDrunkLog(state, target, gamer, "مداوا کند");
 }
 function priestAction(state, target, gamer) {
-  if (!gamer.isDrunk && !gamer.isDisabled && target.isDumb) {
+  if (!gamer.isDrunk && !gamer.isDisabled) {
     if (target.isDumb) {
       target.isDumb = false;
       insertGamerLog(state, target, "توسط کشیش شفا یافت");

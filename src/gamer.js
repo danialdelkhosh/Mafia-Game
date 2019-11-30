@@ -4,17 +4,18 @@ import { Col, Card } from "react-bootstrap";
 export function renderGamer(props) {
   return (
     <Col xs={6} md={6}>
-      <Card
-        onClick={props.onClick}
-        className={gamerStyle(props.alive, props.roleVisible, props.isDumb)}
-      >
+      <Card onClick={props.onClick} className={gamerStyle(props)}>
         <Card.Header>
-          <span className={props.isGameFinished ? "visible" : "hidden"}>
+          <span
+            className={
+              props.isGameFinished || props.showRole ? "visible" : "invisible"
+            }
+          >
             {props.role[0].persianName}
           </span>
         </Card.Header>
         <Card.Body>
-          <Card.Title className="display-2">{props.name}</Card.Title>
+          <Card.Title className="display-3">{props.name}</Card.Title>
           <span className="badge badge-dark">
             {props.alive && props.isDumb && props.isDay ? "لال شده" : ""}
           </span>
@@ -34,7 +35,8 @@ export class Gamer {
     isShot,
     isDumb,
     isDrunk,
-    isDisabled
+    isDisabled,
+    showRole
   ) {
     this.key = key;
     this.name = name;
@@ -48,12 +50,14 @@ export class Gamer {
   }
 }
 
-function gamerStyle(alive, roleVisible, isDumb) {
+function gamerStyle(props) {
   let classNames = "gamerContainer m-3 ";
-  if (alive) {
-    if (roleVisible) {
+  if (props.alive) {
+    if (props.showRole) return classNames + "text-white bg-primary";
+    if (props.roleVisible) return classNames + "text-white bg-success";
+    if (props.currentPerson === props.name)
       return classNames + "text-white bg-success";
-    } else if (isDumb) return classNames + "text-white bg-danger";
-    else return classNames + "bg-light";
+    if (props.isDumb) return classNames + "text-white bg-danger";
+    return classNames + "bg-light";
   } else return classNames + "text-white bg-dark";
 }

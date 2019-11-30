@@ -12,7 +12,6 @@ import Game from "./game";
 ReactDOM.render(
   <BrowserRouter>
     <div>
-      <Route exact path="" component={InitGame} />
       <Route exact path="/" component={InitGame} />
       <Route exact path="/game" component={Game} />
     </div>
